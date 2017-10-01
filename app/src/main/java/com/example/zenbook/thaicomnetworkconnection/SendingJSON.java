@@ -7,9 +7,11 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -31,7 +33,7 @@ import static android.content.ContentValues.TAG;
  * Created by ZENBOOK on 9/22/2017.
  */
 
-public class SendingJSON extends AsyncTask<Void, Void, JSONObject> {
+public class SendingJSON extends AsyncTask<String, String, String> {
     private String url_String = "";
     private JSONObject jsonObjSend;
     
@@ -41,71 +43,46 @@ public class SendingJSON extends AsyncTask<Void, Void, JSONObject> {
     }
         
     @Override
-    protected JSONObject doInBackground(Void... params) {
-        // These two need to be declared outside the try/catch
-        // so that they can be closed in the finally block.
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-    
-        // Will contain the raw JSON response as a string.
-        String forecastJsonStr = null;
-    
+    protected String doInBackground(String... params) {
         try {
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are avaiable at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
-            URL url = new URL(url_String);
+            
+            URL object = new URL(url_String);
         
-            // Create the request to OpenWeatherMap, and open the connection
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.connect();
+            HttpURLConnection con = (HttpURLConnection) object.openConnection();
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestMethod("POST");
+            
+            System.out.println(jsonObjSend.toString());
+    
+            OutputStreamWriter localDataOutputStream = new OutputStreamWriter(con.getOutputStream());
+            localDataOutputStream.write(jsonObjSend.toString());
+            localDataOutputStream.flush();
         
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                // Nothing to do.
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-        
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
-            }
-        
-            if (buffer.length() == 0) {
-                // Stream was empty.  No point in parsing.
-                return null;
-            }
-            forecastJsonStr = buffer.toString();
-            return jsonObjSend;
-        } catch (IOException e) {
-            Log.e("PlaceholderFragment", "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
-            return null;
-        } finally{
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e("PlaceholderFragment", "Error closing stream", e);
-                }
-            }
+            System.out.println(con.getResponseMessage());
         }
+        catch (Exception e){
+            Log.v("ErrorAPP",e.toString());
+        }
+        return "";
     }
     
     @Override
-    protected void onPreExecute() {}
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        System.out.println("post execute");
+    }
     
     @Override
-    protected void onProgressUpdate(Void... values) {}
+    protected void onPreExecute() {
+        super.onPreExecute();
+        System.out.println("pre execute");
+    }
+    
+    @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+    }
 }
