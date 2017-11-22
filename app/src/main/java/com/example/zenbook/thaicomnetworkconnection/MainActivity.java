@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
 //                TH[9] = 10.0;
                         FileSending fileSending = new FileSending();
                         System.out.println("JSON Response Code: " + fileSending.uploadJson(PatientID, Device_ID, dateFormat.format(date), set, time, MV, TH));
-                        System.out.println("File Response Code:: " + fileSending.uploadFile("/sdcard/DCIM/Camera/Aaa.jpg"));
+                        System.out.println("File Response Code:: " + fileSending.uploadImageFile("/sdcard/DCIM/Camera/Aaa.jpg"));
+//                        fileSending.uploadVideoFile("/sdcard/DCIM/Camera/Bbb.mp4");
                     }
                 }).start();
             }
