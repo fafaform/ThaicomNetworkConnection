@@ -23,12 +23,17 @@ import java.net.URL;
  */
 
 public class FileSending {
-    private static String URLj = "http://nbtc.ee.psu.ac.th/ThaicomServer/index.php";
-    private static String upLoadServerUri = "http://nbtc.ee.psu.ac.th/PhpReceiveMedia/index.php";
+    private String URLjson = "http://nbtc.ee.psu.ac.th/ThaicomServer/index.php";
+    private String URLimage = "http://nbtc.ee.psu.ac.th/PhpReceiveMedia/index.php";
     
     
     public FileSending(){
         
+    }
+    
+    public FileSending(String URLjson, String URLimage){
+        this.URLjson = URLjson;
+        this.URLimage = URLimage;
     }
     
 //    public int sendJson(String patientID, int DeviceID, String date, int set, int time, double[] mv, double[] th){
@@ -65,8 +70,7 @@ public class FileSending {
         JSONObject jsonObjSend = toJson(patientID, DeviceID, date, set, time, mv, th);
         HttpURLConnection con = null;
         try {
-            URL object = new URL(URLj);
-        
+            URL object = new URL(URLjson);
             con = (HttpURLConnection) object.openConnection();
             con.setDoOutput(true);
             con.setDoInput(true);
@@ -188,7 +192,7 @@ public class FileSending {
         try { // open a URL connection to the Servlet
             FileInputStream fileInputStream = new FileInputStream(sourceFile);
             bytesAvailable = fileInputStream.available(); // create a buffer of  maximum size
-            URL url = new URL(upLoadServerUri);
+            URL url = new URL(URLimage);
             conn = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
             conn.setDoInput(true); // Allow Inputs
             conn.setDoOutput(true); // Allow Outputs

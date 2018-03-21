@@ -52,7 +52,11 @@ public class MainActivity extends AppCompatActivity {
 //                TH[7] = 8.0;
 //                TH[8] = 9.0;
 //                TH[9] = 10.0;
+                        //TODO: Used default link
                         FileSending fileSending = new FileSending();
+                        //TODO: Input link
+//                        FileSending fileSending1 = new FileSending("URLjson", "URLimage");
+                        //used function
                         System.out.println("JSON Response Code: " + fileSending.uploadJson(PatientID, Device_ID, dateFormat.format(date), set, time, MV, TH));
                         System.out.println("File Response Code:: " + fileSending.uploadImageFile("/sdcard/DCIM/Camera/Aaa.jpg"));
 //                        fileSending.uploadVideoFile("/sdcard/DCIM/Camera/Bbb.mp4");
